@@ -1,3 +1,6 @@
+# Generates a header file containing a table of pulse widths
+# for Rudolph's nose LED
+
 import numpy as np
 import matplotlib
 
