@@ -1,0 +1,15 @@
+Project for Nicole's ugly Christmas sweater
+
+blink.c - makes a glowy LED for the Rudolph nose
+
+pulseWidthTable.py - generates a an exponential table of PWM pulse widths
+                     and writes it as a C header file "pulseWidthTable.h"
+
+Used the sucky Red Hat/TI MSP430 GCC and mspdebug to flash it.
+Here is the whole sequence:
+
+    make 
+
+    sudo mspdebug rf2500
+
+    (mspdebug) prog msp430g2553.o 
