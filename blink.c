@@ -1,10 +1,32 @@
+/* blink.c
+    14-Dec-2014
+
+    This project outputs a PWM signal on P1.0 of the
+    MSP430G2553 suitable to make a nice glowy LED nose
+    for Rudolph the reindeer on a ugly Christmas sweater
+*/
+
+//--------------------------------------------------------------------------- 
+// Includes
+//--------------------------------------------------------------------------- 
+
 #include <msp430.h>
 #include "pulseWidthTable.h"
+
+//--------------------------------------------------------------------------- 
+// Defines
+//--------------------------------------------------------------------------- 
 
 #define PULSE_PERIOD    8192
 #define UP              0
 #define DOWN            1
 #define DELAY           1 
+#define MIN_INDEX       10
+#define DIST_FROM_MAX   2
+
+//--------------------------------------------------------------------------- 
+// Main
+//--------------------------------------------------------------------------- 
 
 int main(void)
 {
@@ -22,15 +44,17 @@ int main(void)
 }
 
 int getNextIndex(void) {
-    static int sIndex = 0;
-    static int periodCount = 0;
+    static int sIndex = 0;      // index into pulseWidth array
+    static int periodCount = 0; // track number of PWM periods since last reset
     static const arraySize = sizeof(pulseWidth)/sizeof(pulseWidth[0]);
-    static int upDown = UP;
+    static int upDown = UP;     // current state: traversing table up or down
 
+    // Test if the periodCount has expired, possibly change directions,
+    // return the index into the table
     if(++periodCount == DELAY) {
         periodCount = 0;    // reset the period count
-        if(sIndex == arraySize - 2) upDown = DOWN;
-        if(sIndex == 10) upDown = UP;
+        if(sIndex == arraySize - DIST_FROM_MAX) upDown = DOWN;
+        if(sIndex == MIN_INDEX) upDown = UP;
         switch(upDown) {
             case UP:
                 return ++sIndex;
